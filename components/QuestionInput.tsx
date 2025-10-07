@@ -15,7 +15,7 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
   
   // New states for dynamic prompt generation
   const [topicName, setTopicName] = useState("");
-  const [numQuestions, setNumQuestions] = useState(20);
+  const [numQuestions, setNumQuestions] = useState<number | "">(20);
   const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [promptCopied, setPromptCopied] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
@@ -51,6 +51,11 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
   const handleGeneratePrompt = () => {
     if (!topicName.trim()) {
       setError("Please enter a topic name");
+      return;
+    }
+    
+    if (!numQuestions || numQuestions < 1 || numQuestions > 100) {
+      setError("Please enter number of questions between 1 and 100");
       return;
     }
     
@@ -197,27 +202,34 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
                   value={numQuestions}
                   onChange={(e) => {
                     const val = e.target.value;
-                    if (val === '' || val === '0') {
-                      setNumQuestions(1);
+                    if (val === '') {
+                      setNumQuestions('');
                     } else {
                       const num = parseInt(val);
                       if (!isNaN(num)) {
-                        setNumQuestions(Math.min(100, Math.max(1, num)));
+                        setNumQuestions(num);
                       }
                     }
                   }}
                   onBlur={(e) => {
-                    const val = parseInt(e.target.value);
-                    if (isNaN(val) || val < 1) {
-                      setNumQuestions(1);
-                    } else if (val > 100) {
-                      setNumQuestions(100);
+                    const val = e.target.value;
+                    if (val === '' || val === '0') {
+                      setNumQuestions(20);
+                    } else {
+                      const num = parseInt(val);
+                      if (isNaN(num) || num < 1) {
+                        setNumQuestions(1);
+                      } else if (num > 100) {
+                        setNumQuestions(100);
+                      }
                     }
                   }}
                   min="1"
                   max="100"
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 font-medium"
+                  placeholder="Enter 1-100"
                 />
+                <p className="text-xs text-gray-500 mt-1">Enter a number between 1 and 100</p>
               </div>
             </div>
 
