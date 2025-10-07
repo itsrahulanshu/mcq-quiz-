@@ -12,6 +12,7 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
   const [error, setError] = useState("");
   const [timerMinutes, setTimerMinutes] = useState(10);
   const [showHelp, setShowHelp] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleLoadQuestions = () => {
     try {
@@ -120,14 +121,14 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
                 <div className="bg-white rounded-xl p-4 border border-blue-200">
                   <p className="text-sm text-gray-700 mb-3">Copy this prompt and use in ChatGPT:</p>
                   <div className="bg-gray-50 p-3 rounded-lg font-mono text-xs sm:text-sm text-gray-800 overflow-x-auto">
-                    {`Generate 20 MCQ questions on [YOUR TOPIC] in this exact JSON format:
+                    {`Generate 20 MCQ questions on [YOUR TOPIC] in this exact JSON format that i can copy paste :
 [
   {
     "id": 1,
     "question": "Question text here?",
     "options": {
       "A": "Option 1",
-      "B": "Option 2", 
+      "B": "Option 2",
       "C": "Option 3",
       "D": "Option 4"
     },
@@ -138,14 +139,41 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
                   </div>
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(`Generate 20 MCQ questions on [YOUR TOPIC] in this exact JSON format:\n[\n  {\n    "id": 1,\n    "question": "Question text here?",\n    "options": {\n      "A": "Option 1",\n      "B": "Option 2",\n      "C": "Option 3",\n      "D": "Option 4"\n    },\n    "answer": "C",\n    "explanation": "Why this answer is correct"\n  }\n]`);
+                      navigator.clipboard.writeText(`Generate 20 MCQ questions on [YOUR TOPIC] in this exact JSON format that i can copy paste :
+[
+  {
+    "id": 1,
+    "question": "Question text here?",
+    "options": {
+      "A": "Option 1",
+      "B": "Option 2",
+      "C": "Option 3",
+      "D": "Option 4"
+    },
+    "answer": "C",
+    "explanation": "Why this answer is correct"
+  }
+]`);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
                     }}
-                    className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                    className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-all duration-200"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    Copy ChatGPT Prompt
+                    {copied ? (
+                      <>
+                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="text-green-600 font-semibold">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy ChatGPT Prompt
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
