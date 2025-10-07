@@ -1,96 +1,189 @@
-# ChatGPTMCQ# 🎓 MCQ Quiz Application# 🎓 MCQ Quiz Application# MCQ Quiz Website 🎯
+# 🎓 ChatGPTMCQ# ChatGPTMCQ# 🎓 MCQ Quiz Application# 🎓 MCQ Quiz Application# MCQ Quiz Website 🎯
 
 
 
-A modern, interactive quiz platform that generates custom multiple-choice questions using ChatGPT. Built with Next.js, TypeScript, and Tailwind CSS.
+A modern, interactive MCQ quiz platform that generates custom multiple-choice questions using ChatGPT. Built with Next.js 15, TypeScript, and Tailwind CSS.
 
 
 
-## FeaturesA modern, fully responsive Multiple Choice Question (MCQ) quiz application built with **Next.js 15**, **TypeScript**, and **Tailwind CSS**. Features a sticky countdown timer with pause/resume functionality, real-time progress tracking, and seamless Vercel deployment.
+## ✨ FeaturesA modern, interactive quiz platform that generates custom multiple-choice questions using ChatGPT. Built with Next.js, TypeScript, and Tailwind CSS.
 
 
 
-### 🎯 Dynamic Quiz Generation
+- 🎯 **AI-Powered Quiz Generation** - Generate custom MCQ prompts for any topic with ChatGPT
 
-- Generate custom MCQ prompts for any topic
+- ⏱️ **Smart Timer System** - Configurable timer with pause/resume and auto-submit
 
-- Specify the number of questions (1-100)![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?logo=next.js)A fully responsive, feature-rich Multiple Choice Question (MCQ) quiz application built with Next.js 15, TypeScript, and Tailwind CSS. Features a sticky countdown timer, complete pause/resume functionality, and seamless Vercel deployment.A fully client-side, serverless MCQ (Multiple Choice Question) quiz application built with Next.js 15, TypeScript, and Tailwind CSS 4. Perfect for creating and taking custom quizzes with real-time scoring, performance analytics, and a **fully responsive design** that works on all devices from mobile phones to ultra-wide monitors.
+- 📊 **Instant Results** - Comprehensive score breakdown with explanations## FeaturesA modern, fully responsive Multiple Choice Question (MCQ) quiz application built with **Next.js 15**, **TypeScript**, and **Tailwind CSS**. Features a sticky countdown timer with pause/resume functionality, real-time progress tracking, and seamless Vercel deployment.
 
-- Get AI-powered quiz questions in seconds
+- 🎨 **Modern UI/UX** - Fully responsive design with smooth animations
 
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+- 🔒 **Privacy First** - All processing done locally in your browser
 
-### ⏱️ Smart Timer System
 
-- Configurable quiz timer (1-60 minutes)![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwind-css)
+
+## 🚀 Quick Start### 🎯 Dynamic Quiz Generation
+
+
+
+### Prerequisites- Generate custom MCQ prompts for any topic
+
+- Node.js 18+ installed
+
+- npm or yarn- Specify the number of questions (1-100)![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?logo=next.js)A fully responsive, feature-rich Multiple Choice Question (MCQ) quiz application built with Next.js 15, TypeScript, and Tailwind CSS. Features a sticky countdown timer, complete pause/resume functionality, and seamless Vercel deployment.A fully client-side, serverless MCQ (Multiple Choice Question) quiz application built with Next.js 15, TypeScript, and Tailwind CSS 4. Perfect for creating and taking custom quizzes with real-time scoring, performance analytics, and a **fully responsive design** that works on all devices from mobile phones to ultra-wide monitors.
+
+
+
+### Installation- Get AI-powered quiz questions in seconds
+
+
+
+```bash![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+
+# Clone the repository
+
+git clone https://github.com/itsrahulanshu/mcq-quiz-.git### ⏱️ Smart Timer System
+
+
+
+# Navigate to project directory- Configurable quiz timer (1-60 minutes)![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwind-css)
+
+cd mcq-quiz-
 
 - Pause and resume functionality
 
-- Auto-submit when time runs out![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+# Install dependencies
 
-- Real-time countdown display
+npm install- Auto-submit when time runs out![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
 
-![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?logo=next.js)## ✨ Features
 
-### 🎨 Beautiful UI/UX
 
-- Gradient-based modern design---
+# Run development server- Real-time countdown display
 
-- Fully responsive interface
+npm run dev
 
-- Smooth animations and transitions![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+```![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?logo=next.js)## ✨ Features
 
-- Step-by-step visual indicators
 
-## ✨ Features
 
-### 📊 Instant Results
+Visit [http://localhost:3000](http://localhost:3000) to see the app.### 🎨 Beautiful UI/UX
 
-- Comprehensive score breakdown![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?logo=tailwind-css)### 1. **Dynamic Question Loading**
 
-- Color-coded question review
 
-- Export results as JSON### Core Functionality
+## 📝 How to Use- Gradient-based modern design---
 
-- See correct answers instantly
 
-- 📝 **Custom Question Input** - Load questions via JSON format![License](https://img.shields.io/badge/license-MIT-green)- Paste custom questions in JSON format
 
-### 🔒 Privacy First
+1. **Generate Prompt** - Enter your topic and number of questions- Fully responsive interface
 
-- All data processed locally in browser- 📊 **Real-time Scoring** - Instant result calculation with detailed analytics
+2. **Copy to ChatGPT** - Use the generated prompt in ChatGPT
+
+3. **Paste JSON** - Import the questions from ChatGPT's response- Smooth animations and transitions![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+
+4. **Start Quiz** - Take the quiz with timer
+
+5. **View Results** - See your score and review answers- Step-by-step visual indicators
+
+
+
+## 🛠️ Tech Stack## ✨ Features
+
+
+
+- **Framework**: Next.js 15 with App Router### 📊 Instant Results
+
+- **Language**: TypeScript
+
+- **Styling**: Tailwind CSS 4- Comprehensive score breakdown![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?logo=tailwind-css)### 1. **Dynamic Question Loading**
+
+- **Build Tool**: Turbopack
+
+- **Deployment**: Vercel- Color-coded question review
+
+
+
+## 📦 Project Structure- Export results as JSON### Core Functionality
+
+
+
+```- See correct answers instantly
+
+quiz/
+
+├── app/              # Next.js app directory- 📝 **Custom Question Input** - Load questions via JSON format![License](https://img.shields.io/badge/license-MIT-green)- Paste custom questions in JSON format
+
+├── components/       # React components
+
+├── context/          # React Context (Timer)### 🔒 Privacy First
+
+├── types/            # TypeScript types
+
+└── public/           # Static assets- All data processed locally in browser- 📊 **Real-time Scoring** - Instant result calculation with detailed analytics
+
+```
 
 - No data collection or tracking
 
+## 🌐 Deployment
+
 - No user accounts required- 🔄 **Question Navigation** - Previous/Next buttons + Quick navigation grid- Load sample questions to get started quickly
+
+### Deploy to Vercel
 
 - Completely client-side
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/itsrahulanshu/mcq-quiz-)
+
 - 📈 **Progress Tracking** - Visual progress bar and answered question counter
+
+Or manually:
 
 ## How It Works
 
-- 🎯 **Result Review** - Comprehensive breakdown of correct/wrong answers with explanations## ✨ Features- Real-time validation of question format
+```bash
+
+# Build for production- 🎯 **Result Review** - Comprehensive breakdown of correct/wrong answers with explanations## ✨ Features- Real-time validation of question format
+
+npm run build
 
 1. **Generate Prompt**: Enter topic name and number of questions
 
-2. **Copy to ChatGPT**: Use the generated prompt in ChatGPT
+# Deploy to Vercel
+
+vercel deploy2. **Copy to ChatGPT**: Use the generated prompt in ChatGPT
+
+```
 
 3. **Import Questions**: Paste the JSON response from ChatGPT
 
+## 📄 License
+
 4. **Start Quiz**: Take the quiz with a timer### Timer System- Support for multiple quiz sessions
+
+MIT License - feel free to use this project for learning or personal use.
 
 5. **View Results**: See your score and review answers
 
+## 👨‍💻 Author
+
 - ⏱️ **Sticky Header Timer** - Always visible countdown timer
+
+**Rahulanshu**
 
 ## Tech Stack
 
-- 🚀 **Auto-start** - Timer begins automatically when quiz loads### 🎯 Core Functionality- Optional question IDs and explanations
+- GitHub: [@itsrahulanshu](https://github.com/itsrahulanshu)
 
-- **Framework**: Next.js 15 with App Router
+- Repository: [mcq-quiz-](https://github.com/itsrahulanshu/mcq-quiz-)- 🚀 **Auto-start** - Timer begins automatically when quiz loads### 🎯 Core Functionality- Optional question IDs and explanations
 
-- **Language**: TypeScript- ⏸️ **Pause/Resume** - Complete pause functionality with visual feedback
+
+
+---- **Framework**: Next.js 15 with App Router
+
+
+
+Made with ❤️ by Rahulanshu- **Language**: TypeScript- ⏸️ **Pause/Resume** - Complete pause functionality with visual feedback
+
 
 - **Styling**: Tailwind CSS 4
 
