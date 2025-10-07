@@ -17,7 +17,7 @@ export default function Home() {
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [showHowToUse, setShowHowToUse] = useState(false);
-  const { startTimer, stopTimer, isPaused } = useTimer();
+  const { startTimer, stopTimer, isPaused, timeLeft } = useTimer();
 
   const handleQuestionsLoaded = (loadedQuestions: Question[], selectedTimerMinutes: number) => {
     setQuestions(loadedQuestions);
@@ -29,28 +29,28 @@ export default function Home() {
   };
 
   const handleSelectOption = (option: "A" | "B" | "C" | "D") => {
-    if (isPaused) return;
+    if (isPaused || timeLeft === 0) return;
     const newAnswers = [...userAnswers];
     newAnswers[currentQuestionIndex].selectedOption = option;
     setUserAnswers(newAnswers);
   };
 
   const handleNext = () => {
-    if (isPaused) return;
+    if (isPaused || timeLeft === 0) return;
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
   const handlePrevious = () => {
-    if (isPaused) return;
+    if (isPaused || timeLeft === 0) return;
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
   const handleJumpToQuestion = (index: number) => {
-    if (isPaused) return;
+    if (isPaused || timeLeft === 0) return;
     setCurrentQuestionIndex(index);
   };
 
@@ -260,11 +260,11 @@ export default function Home() {
           <div className="max-w-6xl mx-auto">
             <QuestionCard question={currentQuestion} questionNumber={currentQuestionIndex + 1} totalQuestions={questions.length} selectedOption={userAnswers[currentQuestionIndex].selectedOption} onSelectOption={handleSelectOption} />
             <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <button onClick={handlePrevious} disabled={currentQuestionIndex === 0 || isPaused} className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${currentQuestionIndex === 0 || isPaused ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-white text-gray-700 hover:bg-gray-50 shadow-lg hover:shadow-xl border-2 border-gray-200"}`}>← Previous</button>
+              <button onClick={handlePrevious} disabled={currentQuestionIndex === 0 || isPaused || timeLeft === 0} className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${currentQuestionIndex === 0 || isPaused || timeLeft === 0 ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-white text-gray-700 hover:bg-gray-50 shadow-lg hover:shadow-xl border-2 border-gray-200"}`}>← Previous</button>
               {currentQuestionIndex === questions.length - 1 ? (
-                <button onClick={handleSubmit} disabled={isPaused} className={`flex-1 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-200 ${isPaused ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-xl hover:shadow-2xl hover:scale-105"}`}>Submit Quiz →</button>
+                <button onClick={handleSubmit} disabled={isPaused || timeLeft === 0} className={`flex-1 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-200 ${isPaused || timeLeft === 0 ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-xl hover:shadow-2xl hover:scale-105"}`}>Submit Quiz →</button>
               ) : (
-                <button onClick={handleNext} disabled={isPaused} className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isPaused ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg hover:shadow-xl hover:scale-105"}`}>Next →</button>
+                <button onClick={handleNext} disabled={isPaused || timeLeft === 0} className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isPaused || timeLeft === 0 ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg hover:shadow-xl hover:scale-105"}`}>Next →</button>
               )}
             </div>
             <div className="mt-8 bg-white rounded-xl shadow-lg p-4 sm:p-6">
@@ -277,7 +277,7 @@ export default function Home() {
                   const isAnswered = userAnswers[index].selectedOption !== null;
                   const isCurrent = index === currentQuestionIndex;
                   return (
-                    <button key={index} onClick={() => handleJumpToQuestion(index)} disabled={isPaused} className={`aspect-square rounded-lg font-semibold text-sm transition-all duration-200 ${isCurrent ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg scale-110 ring-4 ring-blue-200" : isAnswered ? "bg-green-100 text-green-700 hover:bg-green-200 border-2 border-green-300" : "bg-gray-100 text-gray-500 hover:bg-gray-200 border-2 border-gray-300"} ${isPaused ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"}`}>{index + 1}</button>
+                    <button key={index} onClick={() => handleJumpToQuestion(index)} disabled={isPaused || timeLeft === 0} className={`aspect-square rounded-lg font-semibold text-sm transition-all duration-200 ${isCurrent ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg scale-110 ring-4 ring-blue-200" : isAnswered ? "bg-green-100 text-green-700 hover:bg-green-200 border-2 border-green-300" : "bg-gray-100 text-gray-500 hover:bg-gray-200 border-2 border-gray-300"} ${isPaused || timeLeft === 0 ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"}`}>{index + 1}</button>
                   );
                 })}
               </div>

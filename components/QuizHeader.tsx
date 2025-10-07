@@ -126,9 +126,16 @@ export default function QuizHeader({ isQuizActive, onTimerEnd }: QuizHeaderProps
           </div>
         )}
         {!isPaused && timeLeft <= 60 && timeLeft > 0 && (
-          <div className="bg-gradient-to-r from-red-500 to-red-600 text-white py-2 text-center animate-pulse">
+          <div className="bg-gradient-to-r from-red-500 to-red-600 text-white py-2 px-4 text-center animate-pulse">
             <p className="text-sm font-bold">
-              ⚠️ Less than 1 minute remaining! Hurry up!
+              ⚠️ WARNING: Less than 1 minute remaining! Test will be closed automatically when time ends.
+            </p>
+          </div>
+        )}
+        {timeLeft === 0 && (
+          <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-3 px-4 text-center">
+            <p className="text-sm font-bold">
+              ⏰ TIME'S UP! Quiz is being submitted automatically...
             </p>
           </div>
         )}
