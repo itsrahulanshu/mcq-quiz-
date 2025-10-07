@@ -12,10 +12,10 @@ export default function QuizHeader({ isQuizActive, onTimerEnd }: QuizHeaderProps
   const { timeLeft, isRunning, isPaused, pauseTimer, resumeTimer } = useTimer();
 
   useEffect(() => {
-    if (isRunning && timeLeft === 0 && onTimerEnd) {
+    if (timeLeft === 0 && onTimerEnd && isQuizActive) {
       onTimerEnd();
     }
-  }, [timeLeft, isRunning, onTimerEnd]);
+  }, [timeLeft, onTimerEnd, isQuizActive]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
