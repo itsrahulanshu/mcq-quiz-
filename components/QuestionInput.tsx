@@ -204,7 +204,14 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
                 <input
                   type="number"
                   value={numQuestions}
-                  onChange={(e) => setNumQuestions(Math.max(1, Math.min(100, parseInt(e.target.value) || 20)))}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value);
+                    if (!isNaN(value)) {
+                      setNumQuestions(Math.max(1, Math.min(100, value)));
+                    } else {
+                      setNumQuestions(1);
+                    }
+                  }}
                   min="1"
                   max="100"
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 font-medium"
