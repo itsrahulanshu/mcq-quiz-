@@ -205,11 +205,22 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
                   type="number"
                   value={numQuestions}
                   onChange={(e) => {
-                    const value = parseInt(e.target.value);
-                    if (!isNaN(value)) {
-                      setNumQuestions(Math.max(1, Math.min(100, value)));
-                    } else {
+                    const val = e.target.value;
+                    if (val === '' || val === '0') {
                       setNumQuestions(1);
+                    } else {
+                      const num = parseInt(val);
+                      if (!isNaN(num)) {
+                        setNumQuestions(Math.min(100, Math.max(1, num)));
+                      }
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const val = parseInt(e.target.value);
+                    if (isNaN(val) || val < 1) {
+                      setNumQuestions(1);
+                    } else if (val > 100) {
+                      setNumQuestions(100);
                     }
                   }}
                   min="1"
