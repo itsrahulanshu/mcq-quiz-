@@ -127,14 +127,6 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
     <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
       {/* Main Container */}
       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-        
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6 sm:p-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">🎯 MCQ Quiz Generator</h1>
-          <p className="text-blue-100 text-sm sm:text-base">
-            Generate custom MCQ quizzes in seconds with AI assistance
-          </p>
-        </div>
 
         {/* Step Indicators */}
         <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 sm:p-6 border-b border-gray-200">

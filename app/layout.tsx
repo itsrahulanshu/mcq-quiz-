@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TimerProvider } from "@/context/TimerContext";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const geistSans = Geist({
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MCQ Quiz App - Test Your Knowledge",
-  description: "Interactive MCQ Quiz Application with timer, ChatGPT integration, and instant results",
+  title: "ChatGPTMCQ - AI-Powered Quiz Generator",
+  description: "Generate custom MCQ quizzes instantly with ChatGPT. Interactive quiz platform with timer, instant results, and AI integration.",
 };
 
 export default function RootLayout({
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <TimerProvider>
+          <Header />
           <div className="flex-grow">
             {children}
           </div>
