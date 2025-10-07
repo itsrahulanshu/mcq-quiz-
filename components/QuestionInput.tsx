@@ -10,7 +10,7 @@ interface QuestionInputProps {
 export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps) {
   const [jsonInput, setJsonInput] = useState("");
   const [error, setError] = useState("");
-  const [timerMinutes, setTimerMinutes] = useState(10);
+  const [timerMinutes, setTimerMinutes] = useState<number | "">(10);
   const [copied, setCopied] = useState(false);
   
   // New states for dynamic prompt generation
@@ -42,7 +42,9 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
         }
       }
 
-      onQuestionsLoaded(parsed, timerMinutes);
+      // Ensure timerMinutes is a valid number
+      const timerValue = typeof timerMinutes === 'number' ? timerMinutes : 10;
+      onQuestionsLoaded(parsed, timerValue);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Invalid JSON format");
     }
@@ -331,10 +333,34 @@ export default function QuestionInput({ onQuestionsLoaded }: QuestionInputProps)
                 <input
                   type="number"
                   value={timerMinutes}
-                  onChange={(e) => setTimerMinutes(Math.max(1, parseInt(e.target.value) || 1))}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setTimerMinutes('');
+                    } else {
+                      const num = parseInt(val);
+                      if (!isNaN(num)) {
+                        setTimerMinutes(num);
+                      }
+                    }
+                  }}
+                  onBlur={(e) => {
+                    const val = e.target.value;
+                    if (val === '' || val === '0') {
+                      setTimerMinutes(10);
+                    } else {
+                      const num = parseInt(val);
+                      if (isNaN(num) || num < 1) {
+                        setTimerMinutes(1);
+                      } else if (num > 180) {
+                        setTimerMinutes(180);
+                      }
+                    }
+                  }}
                   min="1"
                   max="180"
                   className="w-20 px-3 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 text-gray-700 font-medium"
+                  placeholder="1-180"
                 />
                 <span className="text-sm text-gray-500">minutes</span>
               </div>
