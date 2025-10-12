@@ -1,0 +1,19 @@
+{
+  "name": "ChatGPTMCQ - AI-Powered Quiz Generator",
+  "short_name": "ChatGPTMCQ",
+  "description": "Generate custom MCQ quizzes instantly with ChatGPT. Interactive quiz platform with timer, instant results, and AI integration.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity", "utilities"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

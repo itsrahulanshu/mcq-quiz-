@@ -1,7 +1,8 @@
 "use client";
 
 import { QuizResult } from "@/types/quiz";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getPerformanceBasedQuote } from "@/utils/motivationalQuotes";
 
 interface ResultCardProps {
   result: QuizResult;
@@ -12,6 +13,13 @@ interface ResultCardProps {
 export default function ResultCard({ result, onRestart, allQuestionsData }: ResultCardProps) {
   const [copied, setCopied] = useState(false);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
+  const [motivationalQuote, setMotivationalQuote] = useState<{quote: string, author: string} | null>(null);
+
+  useEffect(() => {
+    // Get a performance-based motivational quote
+    const quote = getPerformanceBasedQuote(result.percentage);
+    setMotivationalQuote(quote);
+  }, [result.percentage]);
 
   const getPerformanceMessage = () => {
     const percentage = result.percentage;
@@ -54,26 +62,52 @@ export default function ResultCard({ result, onRestart, allQuestionsData }: Resu
           </div>
         </div>
 
+        {/* Motivational Quote Section */}
+        {motivationalQuote && (
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 sm:p-5 md:p-6 border-l-4 border-purple-500">
+            <div className="text-center">
+              <div className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-800 mb-2 italic">
+                "{motivationalQuote.quote}"
+              </div>
+              <div className="text-sm sm:text-base text-purple-600 font-medium">
+                — {motivationalQuote.author}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Stats Cards */}
         <div className="p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
-          <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl text-center border border-blue-100 shadow-lg">
-              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                {result.score}
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                {result.score.toFixed(1)}
               </div>
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1.5 sm:mt-2 font-medium">Total Score</div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1.5 sm:mt-2 font-medium">Final Score</div>
+              <div className="text-xs text-gray-500 mt-1">out of {result.maxScore}</div>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl text-center border border-green-100 shadow-lg">
-              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 {result.correctAnswers}
               </div>
               <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1.5 sm:mt-2 font-medium">Correct</div>
+              <div className="text-xs text-green-600 mt-1 font-semibold">+{result.correctAnswers} marks</div>
             </div>
             <div className="bg-gradient-to-br from-red-50 to-pink-50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl text-center border border-red-100 shadow-lg">
-              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
                 {result.wrongAnswers}
               </div>
               <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1.5 sm:mt-2 font-medium">Wrong</div>
+              <div className="text-xs text-red-600 mt-1 font-semibold">
+                {result.negativeMarks > 0 ? `-${(result.wrongAnswers * result.negativeMarks).toFixed(1)} marks` : 'No penalty'}
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-orange-50 to-yellow-50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl text-center border border-orange-100 shadow-lg">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-orange-600 to-yellow-600 bg-clip-text text-transparent">
+                {result.notAttempted}
+              </div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600 mt-1.5 sm:mt-2 font-medium">Not Attempted</div>
+              <div className="text-xs text-orange-600 mt-1 font-semibold">0 marks</div>
             </div>
           </div>
 
@@ -252,27 +286,94 @@ export default function ResultCard({ result, onRestart, allQuestionsData }: Resu
               <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
-              Performance Summary
+              Performance Analysis
             </h4>
-            <ul className="text-xs sm:text-sm md:text-base text-gray-700 space-y-1.5 sm:space-y-2">
-              <li className="flex items-center gap-1.5 sm:gap-2">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
-                Total Questions: <strong>{result.totalQuestions}</strong>
-              </li>
-              <li className="flex items-center gap-1.5 sm:gap-2">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full flex-shrink-0"></span>
-                Questions Attempted: <strong>{result.correctAnswers + result.wrongAnswers}</strong>
-              </li>
-              <li className="flex items-center gap-1.5 sm:gap-2">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                Accuracy: <strong>{result.percentage.toFixed(1)}%</strong>
-              </li>
+            <div className="space-y-3 sm:space-y-4">
+              {/* Quiz Statistics */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <ul className="text-xs sm:text-sm md:text-base text-gray-700 space-y-1.5 sm:space-y-2">
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
+                      Total Questions:
+                    </span>
+                    <strong>{result.totalQuestions}</strong>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full flex-shrink-0"></span>
+                      Questions Attempted:
+                    </span>
+                    <strong>{result.correctAnswers + result.wrongAnswers}</strong>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full flex-shrink-0"></span>
+                      Not Attempted:
+                    </span>
+                    <strong>{result.notAttempted}</strong>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                      Accuracy Rate:
+                    </span>
+                    <strong>{result.percentage.toFixed(1)}%</strong>
+                  </li>
+                </ul>
+                
+                {/* Marking Scheme */}
+                <div className="bg-white p-3 rounded-lg border border-gray-200">
+                  <h5 className="font-semibold text-gray-800 mb-2 text-sm">Marking Scheme</h5>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li className="flex justify-between">
+                      <span>Correct Answer:</span>
+                      <span className="text-green-600 font-semibold">+1 mark</span>
+                    </li>
+                    <li className="flex justify-between">
+                      <span>Wrong Answer:</span>
+                      <span className="text-red-600 font-semibold">
+                        {result.negativeMarks > 0 ? `-${result.negativeMarks} marks` : 'No penalty'}
+                      </span>
+                    </li>
+                    <li className="flex justify-between">
+                      <span>Not Attempted:</span>
+                      <span className="text-orange-600 font-semibold">0 marks</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              {/* Performance Tips */}
               {result.percentage < 60 && (
-                <li className="bg-orange-100 border border-orange-300 rounded-lg p-2.5 sm:p-3 text-orange-700 font-semibold mt-2 sm:mt-3 text-xs sm:text-sm">
-                  💡 Tip: Review the wrong answers above and try again to improve your score!
-                </li>
+                <div className="bg-orange-100 border border-orange-300 rounded-lg p-3 sm:p-4 text-orange-700">
+                  <div className="flex items-start gap-2">
+                    <span className="text-lg">💡</span>
+                    <div>
+                      <h6 className="font-semibold mb-1">Improvement Tips:</h6>
+                      <ul className="text-xs sm:text-sm space-y-1">
+                        <li>• Review the wrong answers above and understand the explanations</li>
+                        <li>• Practice more questions on similar topics</li>
+                        {result.notAttempted > 0 && <li>• Try to attempt all questions next time</li>}
+                        <li>• Take your time to read questions carefully</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               )}
-            </ul>
+              
+              {result.percentage >= 80 && (
+                <div className="bg-green-100 border border-green-300 rounded-lg p-3 sm:p-4 text-green-700">
+                  <div className="flex items-start gap-2">
+                    <span className="text-lg">🎉</span>
+                    <div>
+                      <h6 className="font-semibold mb-1">Excellent Performance!</h6>
+                      <p className="text-xs sm:text-sm">You've demonstrated strong understanding of the subject. Keep up the great work!</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

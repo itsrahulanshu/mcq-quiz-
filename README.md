@@ -1,25 +1,21 @@
 # 🎓 ChatGPTMCQ
 
-A modern, interactive MCQ quiz platform powered by ChatGPT. Built with Next.js 15, TypeScript, and Tailwind CSS.
-
-![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwind-css)
+An AI-powered MCQ quiz platform built with Next.js 15, TypeScript, and Tailwind CSS.
 
 ## ✨ Features
 
-- 🎯 **AI-Powered Quizzes** - Generate custom MCQs for any topic using ChatGPT
-- ⏱️ **Smart Timer** - Configurable timer with pause/resume and auto-submit
-- 📊 **Instant Results** - Comprehensive score breakdown with explanations
-- 🎨 **Modern UI** - Fully responsive design with smooth animations
-- 🔒 **Privacy First** - All data processed locally in your browser
+- 🤖 **AI Quiz Generation** - Generate custom MCQs using ChatGPT integration
+- ⏱️ **Smart Timer** - Configurable timer with pause/resume functionality
+- 📊 **Instant Results** - Comprehensive scoring with detailed explanations
+- 🎨 **Modern UI** - Responsive design with smooth animations
+- 📱 **PWA Ready** - Works offline with service worker caching
 
 ## 🚀 Quick Start
 
 ```bash
-# Clone repository
-git clone https://github.com/itsrahulanshu/mcq-quiz-.git
-cd mcq-quiz-
+# Clone the repository
+git clone <your-repo-url>
+cd quiz
 
 # Install dependencies
 npm install
@@ -28,57 +24,33 @@ npm install
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 📝 How to Use
 
-1. Enter your topic and number of questions
-2. Copy the generated prompt
-3. Paste it in ChatGPT
-4. Import the JSON response
-5. Start your quiz!
+1. **AI Mode**: Enter topic and question count, then use the generated prompt with ChatGPT
+2. **Manual Mode**: Paste ChatGPT's JSON response directly
+3. Configure timer and negative marking settings
+4. Start your quiz and track progress in real-time
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 15 (App Router + Turbopack)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
-- **State**: React Context API
+- **State Management**: React Context
 - **Deployment**: Vercel
 
-## 📦 Project Structure
+## 🌐 Deploy
 
-```
-quiz/
-├── app/              # Next.js app directory
-├── components/       # React components
-├── context/          # Timer context
-├── types/            # TypeScript types
-└── public/           # Static assets
-```
-
-## 🌐 Deploy to Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/itsrahulanshu/mcq-quiz-)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
 ```bash
-# Build for production
 npm run build
-
-# Deploy
-vercel deploy
 ```
+
+The project is optimized for Vercel deployment with zero configuration.
 
 ## 📄 License
 
-MIT License - Free to use for personal and commercial projects.
-
-## 👨‍💻 Author
-
-**Rahulanshu**
-- GitHub: [@itsrahulanshu](https://github.com/itsrahulanshu)
-- Project: [mcq-quiz-](https://github.com/itsrahulanshu/mcq-quiz-)
-
----
-
-Made with ❤️ by Rahulanshu
+MIT License - Free for personal and commercial use.

@@ -1,13 +1,33 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import QuestionInput from "@/components/QuestionInput";
-import QuestionCard from "@/components/QuestionCard";
-import QuizHeader from "@/components/QuizHeader";
-import ResultCard from "@/components/ResultCard";
-import Header from "@/components/Header";
+import { useState, useCallback, lazy, Suspense } from "react";
+import dynamic from "next/dynamic";
 import { Question, UserAnswer, QuizResult } from "@/types/quiz";
 import { useTimer } from "@/context/TimerContext";
+
+// Use dynamic import with no SSR for components that have client-side state
+const QuestionInput = dynamic(() => import("@/components/QuestionInput"), { 
+  ssr: false,
+  loading: () => (
+    <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+        <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-3 mobile:p-2 sm:p-4 md:p-6 border-b border-gray-200">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-center mb-4 mobile:mb-3 sm:mb-6">
+              <div className="animate-pulse bg-gray-200 h-12 w-64 rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+});
+
+// Lazy load other components
+const QuestionCard = lazy(() => import("@/components/QuestionCard"));
+const QuizHeader = lazy(() => import("@/components/QuizHeader"));
+const ResultCard = lazy(() => import("@/components/ResultCard"));
+const Header = lazy(() => import("@/components/Header"));
 
 export default function Home() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -19,13 +39,15 @@ export default function Home() {
   const [showHowToUse, setShowHowToUse] = useState(false);
   const { startTimer, stopTimer, isPaused, timeLeft } = useTimer();
 
-  const handleQuestionsLoaded = (loadedQuestions: Question[], selectedTimerMinutes: number) => {
+  const handleQuestionsLoaded = (loadedQuestions: Question[], selectedTimerMinutes: number, negativeMarks: number) => {
     setQuestions(loadedQuestions);
     setUserAnswers(loadedQuestions.map((_, index) => ({ questionIndex: index, selectedOption: null })));
     setIsQuizStarted(true);
     setCurrentQuestionIndex(0);
     startTimer(selectedTimerMinutes);
     setIsQuizCompleted(false);
+    // Store negative marks for scoring calculation
+    localStorage.setItem('negativeMarks', negativeMarks.toString());
   };
 
   const handleSelectOption = (option: "A" | "B" | "C" | "D") => {
@@ -56,21 +78,49 @@ export default function Home() {
 
   const calculateResult = useCallback((): QuizResult => {
     let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let notAttempted = 0;
     const wrongQuestions: QuizResult["wrongQuestions"] = [];
     const correctQuestions: QuizResult["correctQuestions"] = [];
+    
+    // Get negative marks from localStorage
+    const negativeMarks = parseFloat(localStorage.getItem('negativeMarks') || '0');
+    
     questions.forEach((question, index) => {
       const userAnswer = userAnswers[index].selectedOption;
-      if (userAnswer === question.answer) {
+      if (userAnswer === null) {
+        // Not attempted
+        notAttempted++;
+        wrongQuestions.push({ question, userAnswer: null, correctAnswer: question.answer, explanation: question.explanation });
+      } else if (userAnswer === question.answer) {
+        // Correct answer
         correctAnswers++;
         correctQuestions.push({ question, userAnswer: userAnswer, explanation: question.explanation });
       } else {
-        wrongQuestions.push({ question, userAnswer: userAnswer || null, correctAnswer: question.answer, explanation: question.explanation });
+        // Wrong answer
+        wrongAnswers++;
+        wrongQuestions.push({ question, userAnswer: userAnswer, correctAnswer: question.answer, explanation: question.explanation });
       }
     });
+    
     const totalQuestions = questions.length;
-    const wrongAnswers = totalQuestions - correctAnswers;
-    const percentage = (correctAnswers / totalQuestions) * 100;
-    return { totalQuestions, correctAnswers, wrongAnswers, score: correctAnswers, percentage, wrongQuestions, correctQuestions };
+    // Calculate score with negative marking: correct answers get +1, wrong answers get -negativeMarks, not attempted get 0
+    const score = correctAnswers - (wrongAnswers * negativeMarks);
+    const maxPossibleScore = totalQuestions; // Maximum score if all answers are correct
+    const percentage = totalQuestions > 0 ? Math.max(0, (score / maxPossibleScore) * 100) : 0;
+    
+    return { 
+      totalQuestions, 
+      correctAnswers, 
+      wrongAnswers, 
+      notAttempted,
+      score: Math.max(0, score), // Ensure score doesn't go below 0
+      maxScore: maxPossibleScore,
+      negativeMarks,
+      percentage, 
+      wrongQuestions, 
+      correctQuestions 
+    };
   }, [questions, userAnswers]);
 
   const handleSubmit = () => {
@@ -101,11 +151,25 @@ export default function Home() {
   const getAllQuestionsData = () => JSON.stringify(questions, null, 2);
   const getAnsweredCount = () => userAnswers.filter((ans) => ans.selectedOption !== null).length;
 
+  // Loading fallback component
+  const LoadingFallback = ({ text = "Loading..." }: { text?: string }) => (
+    <div className="flex items-center justify-center p-8">
+      <div className="flex items-center gap-3">
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+        <span className="text-gray-600">{text}</span>
+      </div>
+    </div>
+  );
+
   if (!isQuizStarted) {
     return (
       <>
-        <Header onHowToUseClick={() => setShowHowToUse(!showHowToUse)} />
-        <QuestionInput onQuestionsLoaded={handleQuestionsLoaded} />
+        <Suspense fallback={<LoadingFallback text="Loading header..." />}>
+          <Header onHowToUseClick={() => setShowHowToUse(!showHowToUse)} />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback text="Loading quiz input..." />}>
+          <QuestionInput onQuestionsLoaded={handleQuestionsLoaded} />
+        </Suspense>
         
         {/* How to Use Modal */}
         {showHowToUse && (
@@ -231,8 +295,12 @@ export default function Home() {
   if (isQuizCompleted && quizResult) {
     return (
       <>
-        <Header />
-        <ResultCard result={quizResult} onRestart={handleRestart} allQuestionsData={getAllQuestionsData()} />
+        <Suspense fallback={<LoadingFallback text="Loading header..." />}>
+          <Header />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback text="Loading results..." />}>
+          <ResultCard result={quizResult} onRestart={handleRestart} allQuestionsData={getAllQuestionsData()} />
+        </Suspense>
       </>
     );
   }
@@ -242,9 +310,13 @@ export default function Home() {
 
   return (
     <>
-      <Header />
+      <Suspense fallback={<LoadingFallback text="Loading header..." />}>
+        <Header />
+      </Suspense>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        <QuizHeader isQuizActive={isQuizStarted && !isQuizCompleted} onTimerEnd={handleTimeUp} />
+        <Suspense fallback={<LoadingFallback text="Loading quiz header..." />}>
+          <QuizHeader isQuizActive={isQuizStarted && !isQuizCompleted} onTimerEnd={handleTimeUp} />
+        </Suspense>
         {isPaused && (
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 flex items-center justify-center pointer-events-none">
             <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 pointer-events-auto animate-pulse">
@@ -258,7 +330,9 @@ export default function Home() {
         )}
         <div className="pt-4 sm:pt-6 pb-8 px-4">
           <div className="max-w-6xl mx-auto">
-            <QuestionCard question={currentQuestion} questionNumber={currentQuestionIndex + 1} totalQuestions={questions.length} selectedOption={userAnswers[currentQuestionIndex].selectedOption} onSelectOption={handleSelectOption} />
+            <Suspense fallback={<LoadingFallback text="Loading question..." />}>
+              <QuestionCard question={currentQuestion} questionNumber={currentQuestionIndex + 1} totalQuestions={questions.length} selectedOption={userAnswers[currentQuestionIndex].selectedOption} onSelectOption={handleSelectOption} />
+            </Suspense>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button onClick={handlePrevious} disabled={currentQuestionIndex === 0 || isPaused || timeLeft === 0} className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${currentQuestionIndex === 0 || isPaused || timeLeft === 0 ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-white text-gray-700 hover:bg-gray-50 shadow-lg hover:shadow-xl border-2 border-gray-200"}`}>← Previous</button>
               {currentQuestionIndex === questions.length - 1 ? (

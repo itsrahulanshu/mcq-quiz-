@@ -20,7 +20,10 @@ export interface QuizResult {
   totalQuestions: number;
   correctAnswers: number;
   wrongAnswers: number;
+  notAttempted: number;
   score: number;
+  maxScore: number;
+  negativeMarks: number;
   percentage: number;
   wrongQuestions: {
     question: Question;
